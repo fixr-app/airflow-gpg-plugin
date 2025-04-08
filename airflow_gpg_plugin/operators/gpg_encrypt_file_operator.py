@@ -30,14 +30,16 @@ class GPGEncryptFileOperator(BaseOperator):
             self.conn_id
         )
         conn_obj = gpg_hook.get_connection(self.conn_id)
-        self.log.info(f"Encrypting file {self.input_file_path}")
+        extra_args = conn_obj.extra_dejson.get('gpg_extra_args', [])
+        self.log.info(f"Encrypting file {self.input_file_path} with extra args {extra_args}")
         with gpg_hook.get_conn() as gpg_client:
             with open(self.input_file_path, 'rb') as f:
                 status = gpg_client.encrypt_file(
                     file=f,
                     always_trust=True,
                     recipients=[conn_obj.login],
-                    output=self.output_file_path
+                    output=self.output_file_path,
+                    extra_args=extra_args
                 )
 
         self.log.info(f"Encrypted file {self.input_file_path} to location {self.output_file_path}")

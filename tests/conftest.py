@@ -39,7 +39,11 @@ def gpg_key_with_passphrase_connection(gpg_key_with_passphrase, tmpdir_factory) 
         login=gpg_key_with_passphrase["login"],
         password=gpg_key_with_passphrase["password"],
         extra={
-            "key_file": gpg_key_with_passphrase["key_file"]
+            "key_file": gpg_key_with_passphrase["key_file"],
+            "gpg_extra_args": [
+                "--compress-algo",
+                "zip"
+            ]
         }
     )
 
